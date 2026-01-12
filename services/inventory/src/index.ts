@@ -2,7 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import morgan from 'morgan'
-import { createInventory } from './controller';
+import { createInventory, getInventoryById, getInventoryDetails, updateInventory } from './controller';
 
 dotenv.config()
 
@@ -18,7 +18,20 @@ app.get('/health', (_req, res) => {
 const PORT = process.env.PORT || 4002
 const serviceName = process.env.SERVICE_NAME || 'Inventory-Service'
 
+
+
+//  Api endpoints
+
+app.get('/inventories/:id/details', getInventoryDetails);
+app.get('/inventories/:id', getInventoryById);
+
+// update
+app.put('/inventories/:id', updateInventory);  
+
+// create
 app.post('/inventories', createInventory);
+
+
 
 // 404 handler
 app.use((req, res, _next) => {
