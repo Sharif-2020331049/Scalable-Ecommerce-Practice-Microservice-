@@ -7,6 +7,7 @@ import rateLimit from 'express-rate-limit'
 import axios from 'axios'
 import fs from 'fs'
 import path from 'path'
+import { configureRoutes } from './utils'
 
 dotenv.config()
 const app = express()
@@ -36,107 +37,32 @@ app.use(express.urlencoded({ extended: true }))
 app.use(cors())
 app.use(morgan('dev'))
 
+// TODO: Auth middleware 
 
-// Authentication/Authorization middleware
-const authMiddleware = (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    // TODO: Implement proper authentication (JWT, API key, etc.)
-    // For now, this is a placeholder that allows all requests
-    const authHeader = req.headers.authorization
-    
-    // Example: Basic auth check (uncomment and implement as needed)
-    // if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    //     return res.status(401).json({ error: 'Unauthorized: Missing or invalid token' })
-    // }
-    
-    // Validate token here
-    // const token = authHeader.split(' ')[1]
-    // try {
-    //     // Verify token logic
-    //     next()
-    // } catch (error) {
-    //     return res.status(401).json({ error: 'Unauthorized: Invalid token' })
-    // }
-    
-    next()
-}
 
-// Load service configuration
-const configPath = path.join(__dirname, 'config.json')
-const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'))
+// routes 
+configureRoutes(app);
 
-// Health check endpoint
+
+
+// health check endpoint
 app.get('/health', (_req, res) => {
-    res.status(200).json({ status: 'healthy', service: 'API Gateway' })
-})
+    res.status(200).send({ status: 'API Gateway is healthy' });
+});
 
-// Dynamic route registration based on config
-Object.entries(config.services).forEach(([serviceName, serviceConfig]: [string, any]) => {
-    const serviceUrl = serviceConfig.url
-    const routes = serviceConfig.routes
-
-    routes.forEach((route: any) => {
-        const routePath = route.path
-        const methods = Array.isArray(route.method) ? route.method : [route.method]
-
-        methods.forEach((method: string) => {
-            const httpMethod = method.toLowerCase()
-            
-            // Register route with authentication middleware
-            ;(app as any)[httpMethod](`/api${routePath}`, authMiddleware, async (req: express.Request, res: express.Response) => {
-                try {
-                    // Build target URL
-                    const targetPath = req.path.replace('/api', '')
-                    const targetUrl = `${serviceUrl}${targetPath}`
-                    
-                    // Forward request to the target service
-                    const response = await axios({
-                        method: httpMethod,
-                        url: targetUrl,
-                        data: req.body,
-                        params: req.query,
-                        headers: {
-                            'Content-Type': 'application/json',
-                            ...req.headers
-                        }
-                    })
-
-                    // Return the response from the service
-                    res.status(response.status).json(response.data)
-                } catch (error: any) {
-                    console.error(`Error proxying request to ${serviceName}:`, error.message)
-                    
-                    if (error.response) {
-                        // Forward error response from service
-                        res.status(error.response.status).json(error.response.data)
-                    } else if (error.request) {
-                        // Service didn't respond
-                        res.status(503).json({ error: 'Service unavailable', service: serviceName })
-                    } else {
-                        // Other errors
-                        res.status(500).json({ error: 'Internal server error' })
-                    }
-                }
-            })
-        })
-    })
-})
-
-// 404 handler
-app.use((req, res, _next) => {
-    res.status(404).json({ error: 'Not Found', path: req.path })
-})
+// 404 handler 
+app.use((req: express.Request, res: express.Response, _next: express.NextFunction) => {
+    res.status(404).send({ error: 'Not Found' });
+});
 
 // Error handler
 app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
-    console.error(err.stack)
-    res.status(500).json({ error: 'Internal Server Error' })
-})
+    console.error(err.stack);
+    res.status(500).send({ error: 'Internal Server Error' });
+}); 
 
-// Start server
-const PORT = process.env.PORT || 4000
-const serviceName = process.env.SERVICE_NAME || 'API-Gateway'
+const PORT = process.env.PORT || 8081;
 
 app.listen(PORT, () => {
-    console.log(`${serviceName} is running on port ${PORT}`)
-    console.log(`Registered routes from ${Object.keys(config.services).length} services`)
-})
+    console.log(`API Gateway is running on port ${PORT}`);
+});

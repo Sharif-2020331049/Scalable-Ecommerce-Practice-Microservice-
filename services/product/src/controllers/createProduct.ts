@@ -18,6 +18,12 @@ const createProduct = async (req: Request, res: Response, next: NextFunction) =>
         .json({ error: "Invalid request data", details: parseBody.error.issues });
     }
 
+
+    console.log(req.body);
+    console.log(parseBody.success);
+    
+    
+
     // check if product with same sku exists
     const existingProduct = await prisma.product.findFirst({
       where: { sku: parseBody.data.sku },
@@ -57,6 +63,7 @@ const createProduct = async (req: Request, res: Response, next: NextFunction) =>
     res.status(201).json({...product, inventoryId: inventory.id});
 
   } catch (error) {
+    console.error('Error in createProduct:', error);
     next(error);
   }
 };

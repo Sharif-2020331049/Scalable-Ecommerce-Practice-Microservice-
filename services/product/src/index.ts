@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { Request, Response, NextFunction } from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import morgan from 'morgan'
@@ -22,22 +22,36 @@ app.get('/health', (_req, res) => {
 const PORT = process.env.PORT || 4001
 const serviceName = process.env.SERVICE_NAME || 'Product-Service'
 
-// api endpoints
 
+app.use((req: Request, res: Response, next: NextFunction) => {
+    const allowedOrigins = ['http://localhost:8081', 'http://127.0.0.1:8081'];
+    const origin = req.headers.origin || '';
+    if (allowedOrigins.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+        next();
+    }else {
+        res.status(403).json({ message: 'Forbidden' });
+    }
+
+
+});
+
+// api endpoints
+app.post('/products', createProduct)
 app.get('/product/:id', getProductDetails)
 app.get('/products', getProducts)
-app.post('/products', createProduct)
 
 
 // 404 handler
-app.use((req, res, _next) => {
+app.use((req: Request, res: Response, _next: NextFunction) => {
   res.status(404).json({ error: 'Not Found' })
 })  
  
 // error handler
-app.use((err: Error, _req, res, _next) => {
+app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+  console.error('Error occurred:', err.message)
   console.error(err.stack)
-  res.status(500).send({ error: 'Internal Server Error' })
+  res.status(500).json({ error: 'Internal Server Error', message: err.message })
 })
 
 

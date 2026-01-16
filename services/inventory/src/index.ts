@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { Request, Response, NextFunction } from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import morgan from 'morgan'
@@ -18,7 +18,18 @@ app.get('/health', (_req, res) => {
 const PORT = process.env.PORT || 4002
 const serviceName = process.env.SERVICE_NAME || 'Inventory-Service'
 
+app.use((req: Request, res: Response, next: NextFunction) => {
+    const allowedOrigins = ['http://localhost:8081', 'http://127.0.0.1:8081'];
+    const origin = req.headers.origin || '';
+    if (allowedOrigins.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+        next();
+    }else {
+        res.status(403).json({ message: 'Forbidden' });
+    }
 
+
+});
 
 //  Api endpoints
 
@@ -34,14 +45,15 @@ app.post('/inventories', createInventory);
 
 
 // 404 handler
-app.use((req, res, _next) => {
-  res.status(404).send({ error: 'Not Found' })
+app.use((req: Request, res: Response, _next: NextFunction) => {
+  res.status(404).json({ error: 'Not Found' })
 })  
  
 // error handler
-app.use((err: Error, _req, res, _next) => {
+app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+  console.error('Error occurred:', err.message)
   console.error(err.stack)
-  res.status(500).send({ error: 'Internal Server Error' })
+  res.status(500).json({ error: 'Internal Server Error', message: err.message })
 })
 
 

@@ -13,6 +13,20 @@ const pool = new Pool({ connectionString });
 const adapter = new PrismaPg(pool);
 
 const prisma = new PrismaClient({ adapter });
+
+// Connect to database
+prisma.$connect()
+  .then(() => console.log('✅ Database connected successfully'))
+  .catch((err) => {
+    console.error('❌ Database connection failed:', err);
+    process.exit(1);
+  });
+
+// Graceful shutdown
+process.on('beforeExit', async () => {
+  await prisma.$disconnect();
+});
+
 export default prisma; 
 
 
