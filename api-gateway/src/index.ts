@@ -4,7 +4,9 @@ import dotenv from 'dotenv'
 import morgan from 'morgan'
 import helmet from 'helmet'
 import rateLimit from 'express-rate-limit'
-
+import axios from 'axios'
+import fs from 'fs'
+import path from 'path'
 
 dotenv.config()
 const app = express()
@@ -30,9 +32,9 @@ const limiter = rateLimit({
 app.use('/api', limiter)
 
 app.use(express.json())
-app.use
+app.use(express.urlencoded({ extended: true }))
 app.use(cors())
 app.use(morgan('dev'))
 
 
-// Todo: au
+// TODO: Au
