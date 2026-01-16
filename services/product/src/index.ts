@@ -24,14 +24,14 @@ const serviceName = process.env.SERVICE_NAME || 'Product-Service'
 
 // api endpoints
 
-app.get('/products/:id', getProductDetails)
+app.get('/product/:id', getProductDetails)
 app.get('/products', getProducts)
 app.post('/products', createProduct)
 
 
 // 404 handler
 app.use((req, res, _next) => {
-  res.status(404).send({ error: 'Not Found' })
+  res.status(404).json({ error: 'Not Found' })
 })  
  
 // error handler
