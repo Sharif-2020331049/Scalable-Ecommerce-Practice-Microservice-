@@ -8,7 +8,7 @@ import { INVENTORY_URL } from "@/config";
 const createProduct = async (req: Request, res: Response, next: NextFunction) => {
   try {
 
-     console.log('Received create product request:', req.body);
+   
      
     // Validate request body
     const parseBody = ProductCreateDTOSchema.safeParse(req.body);
@@ -17,6 +17,12 @@ const createProduct = async (req: Request, res: Response, next: NextFunction) =>
         .status(400)
         .json({ error: "Invalid request data", details: parseBody.error.issues });
     }
+
+
+    console.log(req.body);
+    console.log(parseBody.success);
+    
+    
 
     // check if product with same sku exists
     const existingProduct = await prisma.product.findFirst({
@@ -39,6 +45,7 @@ const createProduct = async (req: Request, res: Response, next: NextFunction) =>
     
         const {data: inventory}  = await axios.post(`${INVENTORY_URL}/inventories`, {
             productId: product.id,
+            sku: product.sku,
             quantity: 0
         });
         console.log('Inventory record created successfully for product', inventory.id);
@@ -56,6 +63,7 @@ const createProduct = async (req: Request, res: Response, next: NextFunction) =>
     res.status(201).json({...product, inventoryId: inventory.id});
 
   } catch (error) {
+    console.error('Error in createProduct:', error);
     next(error);
   }
 };

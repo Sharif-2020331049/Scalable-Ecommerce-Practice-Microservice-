@@ -6,6 +6,7 @@ import { INVENTORY_URL } from "@/config";
 const getProduct = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const productId = req.params.id;
+
     const product = await prisma.product.findUnique({   
         where: { id: productId },
         // select: {
@@ -18,6 +19,8 @@ const getProduct = async (req: Request, res: Response, next: NextFunction) => {
         //     inventoryId: true,
         // }
     }); 
+
+    console.log('Product is: ', product);
 
     if (!product) {
       return res.status(404).json({ error: "Product not found" });
