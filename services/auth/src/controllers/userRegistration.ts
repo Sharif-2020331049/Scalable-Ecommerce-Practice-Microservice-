@@ -3,7 +3,7 @@ import prisma from '@/prisma';
 import { userCreateSchema } from '@/schemas';
 import bcrypt from 'bcryptjs';
 import axios from 'axios';
-import { EMAIL_SERVICE } from '@/config';
+import { EMAIL_SERVICE, USER_SERVICE } from '@/config';
 
 
 const generateVerificationCode = () => {
@@ -71,7 +71,7 @@ const userRegistration = async (
 
 
         // create the user profile by calling user service
-        await axios.post(`{USER_SERVICE}/users`, {
+        await axios.post(`${USER_SERVICE}/users`, {
             authUserId: newUser.id,
             name: newUser.name,
             email: newUser.email,

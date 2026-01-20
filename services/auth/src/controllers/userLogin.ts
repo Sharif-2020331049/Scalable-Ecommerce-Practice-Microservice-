@@ -50,13 +50,6 @@ const userLogin = async (
             where: { email } 
         });
         if(!user){
-            await createLoginHistory({
-                userId: "Guest",
-                ipAddress,
-                userAgent,
-                attempt: LoginAttempt.FAILURE,
-            });
-
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
