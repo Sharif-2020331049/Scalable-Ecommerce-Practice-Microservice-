@@ -3,7 +3,7 @@ import prisma from '@/prisma';
 import { userLoginSchema } from '@/schemas';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { LoginAttempt } from '../../generated/prisma';
+import { LoginAttempt } from '../../generated/prisma/enums';
 
 
 type LoginHistory = {

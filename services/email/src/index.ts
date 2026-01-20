@@ -2,7 +2,8 @@ import express, { Request, Response, NextFunction } from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import morgan from 'morgan'
-import { userLogin, userRegistration, verifyToken } from './controllers'
+import { getEmails, sendEmail } from './controllers'
+
 
 
 
@@ -15,7 +16,7 @@ app.use(cors())
 app.use(morgan('dev'))
 
 app.get('/health', (_req, res) => {
-  res.status(200).send('User Service is healthy')
+  res.status(200).send('Email Service is healthy')
 })
 
 
@@ -33,10 +34,8 @@ app.get('/health', (_req, res) => {
 // });
 
 // routes
-
-app.post('/auth/register', userRegistration);
-app.post('/auth/login', userLogin);
-app.post('/auth/verify-token', verifyToken);
+app.post('/emails/send', sendEmail);
+app.get('/emails', getEmails); // just for testing purpose
 
 
 // 404 handler
@@ -53,7 +52,7 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
 
 
 const PORT = process.env.PORT || 4004
-const serviceName = process.env.SERVICE_NAME || 'User-Service'
+const serviceName = process.env.SERVICE_NAME || 'Email-Service'
 
 
 
