@@ -15,7 +15,7 @@ app.use(cors())
 app.use(morgan('dev'))
 
 app.get('/health', (_req, res) => {
-  res.status(200).send('User Service is healthy')
+  res.status(200).send('Auth Service is healthy')
 })
 
 
@@ -52,8 +52,8 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
 })
 
 
-const PORT = process.env.PORT || 4004
-const serviceName = process.env.SERVICE_NAME || 'User-Service'
+const PORT = process.env.PORT || 4003
+const serviceName = process.env.SERVICE_NAME || 'Auth-Service'
 
 
 

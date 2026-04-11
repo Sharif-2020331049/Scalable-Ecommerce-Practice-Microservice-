@@ -23,18 +23,18 @@ const PORT = process.env.PORT || 4001
 const serviceName = process.env.SERVICE_NAME || 'Product-Service'
 
 
-app.use((req: Request, res: Response, next: NextFunction) => {
-    const allowedOrigins = ['http://localhost:8081', 'http://127.0.0.1:8081'];
-    const origin = req.headers.origin || '';
-    if (allowedOrigins.includes(origin)) {
-        res.setHeader('Access-Control-Allow-Origin', origin);
-        next();
-    }else {
-        res.status(403).json({ message: 'Forbidden' });
-    }
+// app.use((req: Request, res: Response, next: NextFunction) => {
+//     const allowedOrigins = ['http://localhost:8081', 'http://127.0.0.1:8081'];
+//     const origin = req.headers.origin || '';
+//     if (allowedOrigins.includes(origin)) {
+//         res.setHeader('Access-Control-Allow-Origin', origin);
+//         next();
+//     }else {
+//         res.status(403).json({ message: 'Forbidden' });
+//     }
 
 
-});
+// });
 
 // api endpoints
 app.post('/products', createProduct)

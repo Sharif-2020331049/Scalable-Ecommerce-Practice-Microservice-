@@ -18,18 +18,18 @@ app.get('/health', (_req, res) => {
 const PORT = process.env.PORT || 4002
 const serviceName = process.env.SERVICE_NAME || 'Inventory-Service'
 
-app.use((req: Request, res: Response, next: NextFunction) => {
-    const allowedOrigins = ['http://localhost:8081', 'http://127.0.0.1:8081'];
-    const origin = req.headers.origin || '';
-    if (allowedOrigins.includes(origin)) {
-        res.setHeader('Access-Control-Allow-Origin', origin);
-        next();
-    }else {
-        res.status(403).json({ message: 'Forbidden' });
-    }
+// app.use((req: Request, res: Response, next: NextFunction) => {
+//     const allowedOrigins = ['http://localhost:8081', 'http://127.0.0.1:8081'];
+//     const origin = req.headers.origin || '';
+//     if (allowedOrigins.includes(origin)) {
+//         res.setHeader('Access-Control-Allow-Origin', origin);
+//         next();
+//     }else {
+//         res.status(403).json({ message: 'Forbidden' });
+//     }
 
 
-});
+// });
 
 //  Api endpoints
 

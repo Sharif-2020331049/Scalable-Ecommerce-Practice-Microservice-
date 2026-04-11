@@ -37,7 +37,6 @@ const createInventory = async (req: Request, res: Response, next: NextFunction) 
                 lastQuantity: 0,
                 newQuantity: parseBody.data.quantity,
 
-
              }
            }
         },
