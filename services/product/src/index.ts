@@ -2,7 +2,7 @@ import express, { Request, Response, NextFunction } from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import morgan from 'morgan'
-import { createProduct } from './controllers/index'
+import { createProduct, updateProduct } from './controllers/index'
 import { getProductDetails } from './controllers/index'
 import { getProducts } from './controllers/index'
 
@@ -37,9 +37,10 @@ const serviceName = process.env.SERVICE_NAME || 'Product-Service'
 // });
 
 // api endpoints
-app.post('/products', createProduct)
-app.get('/product/:id', getProductDetails)
-app.get('/products', getProducts)
+app.get('/product/:id', getProductDetails);
+app.put('/products/:id', updateProduct);
+app.post('/products', createProduct);
+app.get('/products', getProducts);
 
 
 // 404 handler

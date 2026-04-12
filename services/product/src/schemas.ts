@@ -11,6 +11,9 @@ export const ProductCreateDTOSchema = z.object({
 
 })
 
+export const ProductUpdateDTOSchema = ProductCreateDTOSchema.omit(
+  { sku: true }
+).partial();
 
 
 
