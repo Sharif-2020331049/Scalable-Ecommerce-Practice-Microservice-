@@ -7,7 +7,7 @@ import rateLimit from 'express-rate-limit'
 import axios from 'axios'
 import fs from 'fs'
 import path from 'path'
-import { addToCart, getMyCart } from './controllers'
+import { addToCart, clearCart, getMyCart } from './controllers'
 import './events/onKeyExpires';
 
 dotenv.config()
@@ -44,6 +44,7 @@ app.use(morgan('dev'))
 // routes 
 app.post('/cart/add-to-cart', addToCart);
 app.get('/cart/me', getMyCart);
+app.get('/cart/clear', clearCart);
 
 
 

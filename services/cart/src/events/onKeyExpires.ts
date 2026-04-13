@@ -1,4 +1,5 @@
 import { REDIS_HOST, REDIS_PORT } from '@/config';
+import { clearCart } from '@/services';
 import { Redis } from 'ioredis';
 
 const redis = new Redis({
@@ -15,6 +16,17 @@ redis.on('message', async (channel, message) => {
     if (channel === CHANNEL_KEY) {
         console.log("Key expired:", message); 
         // Here you can add logic to handle the expired key, e.g., clean up related data or notify other services
+
+        const cartSessionId = message.split(':').pop(); // the key format is "cart:{cartSessionId}"
+
+        if(!cartSessionId) {
+            return;
+        }
+
+        clearCart(cartSessionId);
+
+
+
     }
 });
 
