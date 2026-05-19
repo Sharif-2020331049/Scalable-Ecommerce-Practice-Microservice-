@@ -388,11 +388,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 **Sharif-2020331049**
 
 - GitHub: [@Sharif-2020331049](https://github.com/Sharif-2020331049)
-- LinkedIn: [Your LinkedIn Profile](https://linkedin.com/in/your-profile)
+- LinkedIn: [Connect on LinkedIn](https://www.linkedin.com/in/sahidurrahman49/)
 
 ## 📞 Support
 
-For support, email [your-email@example.com](mailto:your-email@example.com) or open an issue in the repository.
+For support, email [sharif433742@gmail.com](mailto:sharif433742@gmail.com) or open an issue in the repository.
 
 ---
 
