@@ -14,12 +14,23 @@ import axios from 'axios';
 import { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 
+// type CartResponse = {
+// 	items: z.infer<typeof CartItemSchema>[];
+// };
+
+// type ProductResponse = {
+// 	id: string;
+// 	sku: string;
+// 	name: string;
+// 	price: number;
+// };
+
 const checkout = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		// validate request
 		const parsedBody = OrderSchema.safeParse(req.body);
 		if (!parsedBody.success) {
-			return res.status(400).json({ errors: parsedBody.error.messages });
+			return res.status(400).json({ errors: parsedBody.error.issues });
 		}
 
 		// get cart details
@@ -30,7 +41,7 @@ const checkout = async (req: Request, res: Response, next: NextFunction) => {
 		});
 		const cartItems = z.array(CartItemSchema).safeParse(cartData.items);
 		if (!cartItems.success) {
-			return res.status(400).json({ errors: cartItems.error.messages });
+			return res.status(400).json({ errors: cartItems.error.issues });
 		}
 
 		if (cartItems.data.length === 0) {
@@ -41,7 +52,7 @@ const checkout = async (req: Request, res: Response, next: NextFunction) => {
 		const productDetails = await Promise.all(   
 			cartItems.data.map(async (item) => {
 				const { data: product } = await axios.get(
-					`${PRODUCT_SERVICE}/products/${item.productId}`
+					`${PRODUCT_SERVICE}/product/${item.productId}`
 				);
 				return {
 					productId: product.id as string,

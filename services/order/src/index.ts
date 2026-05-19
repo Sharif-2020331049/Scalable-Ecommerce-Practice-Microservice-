@@ -2,6 +2,8 @@ import express, { Request, Response, NextFunction } from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import morgan from 'morgan'
+import { checkout, getOrderById, getOrders } from './controller'
+import prisma from './prisma'
 
 dotenv.config()
 
@@ -31,7 +33,9 @@ const serviceName = process.env.SERVICE_NAME || 'Order-Service'
 // });
 
 //  routes
-
+app.post('/orders/checkout', checkout);
+app.get('/orders/:id', getOrderById);
+app.get('/orders', getOrders);
 
 
 // 404 handler
@@ -47,6 +51,35 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
 })
 
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`${serviceName} is running on port ${PORT}`)
-})  
+})
+
+// server.on('error', (err) => {
+//   console.error('Server error:', err)
+// })
+
+// server.on('close', () => {
+//   console.error('HTTP server closed')
+// })
+
+// const shutdown = async (signal: string) => {
+//   console.log(`${signal} received. Shutting down ${serviceName}...`)
+
+//   server.close(async () => {
+//     try {
+//       await prisma.$disconnect()
+//       console.log('Database disconnected')
+//     } finally {
+//       process.exit(0)
+//     }
+//   })
+// }
+
+// process.on('SIGINT', () => {
+//   void shutdown('SIGINT')
+// })
+
+// process.on('SIGTERM', () => {
+//   void shutdown('SIGTERM')
+// })
